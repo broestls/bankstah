@@ -1,16 +1,15 @@
+import datetime
 import discord
 import config
-import datetime
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from setup import User,Transaction,Bank
+
+from base import Session
+from user import User
+from transaction import Transaction
+from util import snowflake_to_ts
 
 # Create an instance of the discord class
 client = discord.Client()
 lastconnectf = open("state/last.txt","w+")
-
-engine = create_engine(config.DATABASE_URL, echo=True)
-Session = sessionmaker(bind=engine)
 
 @client.event
 async def on_ready():
@@ -25,6 +24,9 @@ async def on_disconnect():
 
 @client.event
 async def on_message(message):
+    print(snowflake_to_ts(message.id), end='')
+    print(": ", end='')
+    print(message)
     if message.author == client.user:
         return
 
@@ -35,7 +37,9 @@ async def on_message(message):
             await message.channel.send('Logged that ' + msg_split[0] + ' gave ' + str(msg_split[3]) + ' to their guild.')
 
             session = Session()
-            exists = session.query.filter_
+            exists = session.query(User).filter(User.id == message.author.id)
+            print(exists)
+            session.close()
         elif 'withdrew' in message.content.lower():
             msg_split = message.content.split(" ")
             print(msg_split[0] + ' withdrew ' + str(msg_split[3]) + ' to their guild.')
