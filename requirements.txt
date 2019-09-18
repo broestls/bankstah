@@ -1,2 +1,4 @@
 psycopg2-binary
 SQLAlchemy
+requests
+discord.py

@@ -1,10 +1,11 @@
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
+from user import User
+
 import datetime
 
 from base import Base
-
 
 class Transaction(Base):
     __tablename__ = 'transactions'

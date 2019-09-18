@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy.orm import relationship
 import datetime
 
 from base import Base
@@ -10,6 +11,7 @@ class User(Base):
     discord_id = Column(String)
     name = Column(String)
     lastseen = Column(DateTime, default=datetime.datetime.utcnow)
+    transactions = relationship("Transactions", back_populates="users")
 
     def __init__(self, discord_id, username, lastseen):
         self.discord_id = discord_id
