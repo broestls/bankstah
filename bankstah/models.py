@@ -1,6 +1,8 @@
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 import datetime
+import time
 
 from base import Base
 
@@ -48,20 +50,19 @@ class Brew(Base):
     __tablename__ = 'brew'
 
     id = Column(Integer, primary_key=True)
-    recipe = Column(Integer)
+    recipe = Column(String)
     is_tested = Column(Boolean, unique=False, default=False)
     duration = Column(Integer)
     result = Column(String)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship("User", back_populates="brew")
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    user = Column(String)
+    timestamp = Column(DateTime, server_default=func.now())
 
-    def __init__(self, recipe, is_tested, duration, user):
-        self.amount = amount
-        self.type = type
-        self.user_id = user_id
-        self.username = username
-        self.timestamp = timestamp
+    def __init__(self, recipe, result, is_tested, duration, user):
+        self.recipe = recipe
+        self.result = result
+        self.is_tested = is_tested
+        self.duration = duration
+        self.user = user
 
     def __repr__(self):
-        return "<Transaction(name='%s', type='%s', amount='%i' on '%s')>" % (self.username, self.type, self.amount, self.lastseen.strftime("%m/%d/%Y, %H:%M:%S"))
+        return "<Brew(recipe='%s', result='%s', tested='%s', duration=%i, user=%s at '%s')>" % (self.recipe, self.result, self.is_tested, self.duration, self.user, self.timestamp)
